@@ -1,0 +1,195 @@
+--What is JDBC?
+JDBC is a Java api that allows java application to connect with database.it used to execute sql queries and retrieve the results.
+Thinkn JDBC is a Bridge between Java application and Data base
+
+--JDBC Architecture Layers
+   Java Application
+   JDBC Api
+   JDBC DriverManager
+   Database
+   
+Jdbc Architecturs
+    There are 7 steps to connect database to java applidation
+    
+    1.)Import Package  //
+    2.) Load Driver
+ 	3.)Register Driver
+	4.)Create Connection
+	5.)Create Statement
+	6.)Execute Statement( Statement & prepareStatement)
+	7.)Close the resources
+      
+
+--Describe JDBC connection flow and the purpose of the PostgreSQL JDBC driver.
+
+1.)Add PostgreSQL JDBC Driver (External JAR)  //
+
+  *The PostgreSQL JDBC driver (postgresql-42.x.x.jar) must be in the classpath
+  *It contains the implementation of JDBC interfaces for PostgreSQL
+  *Without this JAR → Java cannot connect to PostgreSQL.
+
+2).Driver Loading
+   *When the application starts:
+       Class.forName("org.postgresql.Driver"); // optional in JDBC 4+
+   *Registers the PostgreSQL driver with DriverManager  //
+   *In modern Java, this happens automatically using SPI (Service Provider Interface)
+
+3️.)DriverManager Searches for Matching Driver
+		Connection con = DriverManager.getConnection(
+			"jdbc:postgresql://localhost:5432/testdb",
+			"postgres",
+			"password"
+		);
+	*DriverManager scans all loaded drivers
+	*Finds the driver that understands jdbc:postgresql: URL
+	*Selects the PostgreSQL driver
+
+4.)Connection is Established
+   PostgreSQL driver:
+   *Opens a socket connection to PostgreSQL server
+   *Performs authentication
+   *Creates a session
+   *Returns a Connection object to Java application
+
+5.)SQL Execution
+
+   Using the connection:
+
+	PreparedStatement ps =
+		con.prepareStatement("SELECT * FROM employees");
+	ResultSet rs = ps.executeQuery();
+	*SQL is converted into PostgreSQL-specific protocol
+	*Query is sent to database
+	*Database executes and returns results
+
+7.)Result Processing
+	while (rs.next()) {
+		System.out.println(rs.getString("name"));
+	}
+	*PostgreSQL driver converts DB data into Java types
+	*Populates ResultSet
+	
+8.)Resource Cleanup
+	rs.close();
+	ps.close();
+	con.close();
+
+	*Frees DB connections
+	*Prevents memory leaks
+
+--Statement
+	Statement sends the full SQL query along with values to the database every time. 
+	The database has to read, compile, and run the query again and again. 
+	Because user input is directly added into the SQL, it is slow and unsafe, and it can lead to SQL injection.
+
+--PreparedStatement
+	PreparedStatement sends the SQL query only once with placeholders (?). 
+	The database compiles it once, and later only the values are sent separately. 
+	This makes it faster, reusable, and secure, because user input is treated as data, not as SQL code, so SQL injection is prevented.
+
+🔑 One-line memory tip:
+
+Statement = simple but unsafe
+PreparedStatement = fast and secure (recommended)	
+
+--Demonstrate knowledge of executing and processing SQL queries using ResultSet.D
+	ResultSet is used to process the data returned by a SQL SELECT query.
+	After executing the query using Statement or PreparedStatement, the result is stored in a ResultSet. 
+	We use methods like next() to move row by row and getter methods such as getInt(), getString(), or getDouble() to read column values.
+
+	Example:
+
+	ResultSet rs = stmt.executeQuery("SELECT * FROM emp");
+	while (rs.next()) {
+		System.out.println(rs.getInt("id") + " " + rs.getString("name"));
+	}
+
+
+👉 In short: ResultSet acts like a cursor to read database rows one by one.
+
+--Discuss error handling and resource cleanup in JDBC. in short
+
+	In JDBC, error handling is done using try–catch blocks to catch SQLException and handle database errors properly. 
+	We can check error details using methods like getMessage(), getErrorCode(), and getSQLState().
+
+	Resource cleanup is very important to avoid memory leaks. 
+	JDBC objects like ResultSet, Statement, and Connection should always be closed after use. 
+	The best way is to use try-with-resources, which automatically closes all resources even if an exception occurs.
+
+	👉 In short: Handle exceptions with SQLException and always close JDBC resources to prevent memory leaks.
+	
+--Write a short code snippet to fetch data from a database. in short
+
+	Connection con = DriverManager.getConnection(
+			"jdbc:postgresql://localhost:5432/testdb",
+			"user",
+			"password"
+	);
+
+	PreparedStatement ps =
+			con.prepareStatement("SELECT id, name FROM employee");
+
+	ResultSet rs = ps.executeQuery();
+
+	while (rs.next()) {
+		System.out.println(rs.getInt("id") + " " + rs.getString("name"));
+	}
+
+	rs.close();
+	ps.close();
+	con.close();	
+	
+--What is SQL Injection? (Short Interview Answer)
+
+SQL injection is a security attack where a hacker inserts malicious SQL code into user input.
+ If the application directly adds this input into an SQL query, 
+ the database may execute the attacker’s code, allowing unauthorized access, data leakage, or data deletion.
+ 
+--Transaction in JDBC 
+  Transaction is a Group of sql queries executed in one unit of work
+  The main purpose is to maintain data consistency and integrity.
+  By default, JDBC Connection has auto-commit enabled.
+  I disable auto-commit using setAutoCommit(false), execute the required queries, and call commit() (con.commit()) if all operations are successful.
+  If any operation fails, I call rollback() (con.rollback())to maintain data consistency.
+	
+--JDBC Batch
+  JDBC Batch Processing is used to execute multiple SQL operations together instead of sending each operation separately to the database.
+  We use addBatch() to add operations and executeBatch() to execute them. 
+  It improves performance by reducing database round trips. 
+  PreparedStatement with batch processing is commonly used for bulk insert and update operations.	
+  
+  Connection con = DriverManager.getConnection(url, username, password);
+
+con.setAutoCommit(false);
+
+String sql = "INSERT INTO employee(id, name, salary) VALUES (?, ?, ?)";
+
+PreparedStatement ps = con.prepareStatement(sql);
+
+// Employee 1
+ps.setInt(1, 101);
+ps.setString(2, "Arun");
+ps.setDouble(3, 50000);
+ps.addBatch();
+
+// Employee 2
+ps.setInt(1, 102);
+ps.setString(2, "Kumar");
+ps.setDouble(3, 60000);
+ps.addBatch();
+
+// Employee 3
+ps.setInt(1, 103);
+ps.setString(2, "Ravi");
+ps.setDouble(3, 55000);
+ps.addBatch();
+
+try {
+    int[] result = ps.executeBatch();
+    con.commit();
+} catch (SQLException e) {
+    con.rollback();
+}
+	
+	
+	

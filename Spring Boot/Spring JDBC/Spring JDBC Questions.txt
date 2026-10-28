@@ -1,0 +1,118 @@
+1. What is Spring JDBC?
+2. Why do we use Spring JDBC instead of Plain JDBC?
+3. What problems exist in traditional JDBC?
+4. Which dependency is used for Spring JDBC in Spring Boot?
+5. What are the main classes/components in Spring JDBC?
+6. What is DataSource in Spring JDBC?
+7. How is the DB connected in Spring Boot?
+8. Explain spring.datasource.url.
+9. What do spring.datasource.username and password do?
+10. How do you configure DataSource manually?
+11. DriverManagerDataSource vs pooled DataSource (HikariCP)?
+12. What is connection pooling?
+13. What is the default connection pool in Spring Boot?
+14. What is JdbcTemplate?
+15. What are the main responsibilities of JdbcTemplate?
+16. How does JdbcTemplate get the database connection?
+17. Why JdbcTemplate?
+18. What are the common JdbcTemplate methods?
+19. Write an INSERT example using JdbcTemplate.
+20. Write a SELECT example to fetch all students.
+21. Difference between update() and batchUpdate()?
+22. Difference between query(), queryForObject(), queryForList()?
+23. What happens if queryForObject() returns multiple rows?
+24. What happens if queryForObject() returns zero rows?
+25. Is JdbcTemplate thread-safe?
+26. Does JdbcTemplate use Statement or PreparedStatement?
+27. How do you get the auto-generated key after an INSERT?
+28. What is SimpleJdbcInsert?
+29. How do you call a stored procedure in Spring JDBC?
+30. What is RowMapper?
+31. What is ResultSetExtractor?
+32. Difference between RowMapper and ResultSetExtractor?
+33. Write a RowMapper implementation.
+34. What is BeanPropertyRowMapper?
+35. What is NamedParameterJdbcTemplate?
+36. Why use NamedParameterJdbcTemplate over JdbcTemplate?
+37. Write an INSERT example using NamedParameterJdbcTemplate.
+38. What is BeanPropertySqlParameterSource?
+39. What is MapSqlParameterSource?
+40. Write a SELECT example using NamedParameterJdbcTemplate.
+41. How does Spring JDBC handle exceptions?
+42. Why is DataAccessException unchecked?
+43. What is @Transactional?
+44. What are the important attributes of @Transactional?
+45. What is propagation? Explain the types.
+46. What is isolation? Explain the levels.
+47. What is rollbackFor?
+48. What is readOnly?
+49. What is timeout?
+50. Show all attributes in one example.
+51. Which transaction manager is used with Spring JDBC?
+52. How does @Transactional work internally?
+53. Why does @Transactional not work on self-invocation?
+54. Which is best: Spring JDBC or Spring Data JPA?
+55. Why is Spring JDBC preferred for performance and SQL control?
+56. Why is Spring Data JPA preferred for rapid development and complex models?
+57. Give a real-world analogy for Spring JDBC vs JPA.
+58. When should you choose Spring JDBC vs Spring Data JPA?
+59. How does Spring JDBC prevent SQL injection?
+60. What are the steps in plain JDBC?
+61. Statement vs PreparedStatement vs CallableStatement?
+62. What design pattern does JdbcTemplate follow?
+63. What are the callback interfaces used by JdbcTemplate?
+64. How does Spring JDBC avoid connection leaks?
+65. How do you fetch a single value like a count?
+66. Write UPDATE and DELETE examples with JdbcTemplate.
+67. Write a queryForObject() example for one student by id.
+68. Write a batchUpdate() example.
+69. How do you handle a “not found” case with queryForObject()?
+70. What is execute() in JdbcTemplate?
+71. How do you implement pagination with Spring JDBC?
+72. How do you process a very large result set without loading everything into memory?
+73. RowMapper vs RowCallbackHandler?
+74. How do you set query timeout, fetch size and max rows?
+75. What is JdbcClient?
+76. How do you use an IN clause with NamedParameterJdbcTemplate?
+77. Relationship between NamedParameterJdbcTemplate and JdbcTemplate?
+78. How do you get the generated key with SimpleJdbcInsert?
+79. How do you get the generated key with NamedParameterJdbcTemplate?
+80. How do you map a one-to-many join using ResultSetExtractor?
+81. BeanPropertyRowMapper vs DataClassRowMapper?
+82. What is the drawback of BeanPropertyRowMapper?
+83. How do you handle NULL values in a RowMapper?
+84. What are the important HikariCP properties?
+85. How do you choose the pool size?
+86. What happens when all connections in the pool are busy?
+87. How do you configure multiple DataSources?
+88. Which Spring Boot auto-configuration classes set up JDBC?
+89. How do you run schema.sql and data.sql at startup?
+90. How do you log the SQL executed by JdbcTemplate?
+91. Explain the DataAccessException hierarchy.
+92. How does Spring translate SQLException into DataAccessException?
+93. What are transient and non-transient data access exceptions?
+94. How do you handle DuplicateKeyException?
+95. What is the role of @Repository in Spring JDBC?
+96. What are ACID properties?
+97. What are dirty read, non-repeatable read and phantom read?
+98. Which isolation level prevents which problem?
+99. Explain REQUIRED vs REQUIRES_NEW with an example.
+100. What is NESTED propagation?
+101. What is the default rollback behavior of @Transactional?
+102. Why doesn’t the transaction roll back when I catch the exception inside the method?
+103. Does @Transactional work on private methods?
+104. @Transactional on class level vs method level?
+105. What is TransactionTemplate?
+106. Declarative vs programmatic transaction management?
+107. What is PlatformTransactionManager?
+108. Can JdbcTemplate and JPA be used together in the same transaction?
+109. Does readOnly = true really prevent writes?
+110. How do you test Spring JDBC code?
+111. What are the disadvantages of Spring JDBC?
+112. How do you avoid SQL injection when the table or column name is dynamic?
+113. Scenario: a bulk insert of 1 lakh records is slow. How do you optimize it?
+114. Scenario: Connection is not available, request timed out error. What do you check?
+115. Scenario: how do you handle a deadlock?
+116. Scenario: how do you do an optimistic lock with Spring JDBC?
+117. Can we use Spring JDBC without Spring Boot?
+118. Spring JDBC vs Hibernate: which would you pick for a reporting module?

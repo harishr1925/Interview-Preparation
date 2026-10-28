@@ -1,0 +1,456 @@
+--What is Spring JDBC?
+
+  Spring JDBC is a Spring Framework module that provides a simplified and consistent way to interact with relational databases using JDBC,
+  by handling resource management and translating SQL exceptions into runtime exceptions.
+  
+Why do we use Spring JDBC instead of Plain JDBC?
+
+👉 Because Spring JDBC removes boilerplate code, manages resources automatically, and makes database access cleaner, safer, and easier to maintain.
+
+--Why Spring JDBC?
+
+  *Traditional JDBC requires a lot of repetitive code:
+  *Opening/closing connections
+  *Handling SQLException
+  *Writing try-catch-finally blocks
+  *Mapping ResultSet to objects
+  
+👉 Spring JDBC solves these problems while still letting you write SQL directly.  
+
+--What is RowMapper in Spring JDBC?
+
+ RowMapper is an interface used to convert each row of a ResultSet into a Java object.,mapRow()
+ 
+--What is ResultSetExtractor in Spring JDBC?
+
+👉 ResultSetExtractor is an interface used to extract data from the entire ResultSet and return any custom object.extractData()
+
+--What is DataSource in Spring JDBC?
+
+👉 DataSource is an interface that provides database connections and manages connection pooling in Spring applications.
+    spring.datasource.url=jdbc:mysql://localhost:3306/schooldb
+	spring.datasource.username=root
+	spring.datasource.password=root
+	spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+	
+	RARE
+	🧩 DataSource Interface
+	public interface DataSource {
+		Connection getConnection() throws SQLException;
+	}
+
+	🛠️ Manual DataSource Configuration (Rare)
+	@Bean
+	public DataSource dataSource() {
+		DriverManagerDataSource ds = new DriverManagerDataSource();
+		ds.setUrl("jdbc:mysql://localhost:3306/schooldb");
+		ds.setUsername("root");
+		ds.setPassword("root");
+		return ds;
+}
+
+How DB is Connected?
+•	Spring Boot auto-configures:
+o	DataSource
+o	JdbcTemplate
+•	No XML required
+________________________________________
+1️⃣ spring.datasource.url
+spring.datasource.url=jdbc:mysql://localhost:3306/schooldb
+🔍 Explanation
+•	jdbc:mysql:// → JDBC protocol + MySQL database
+•	localhost → Database is running on local machine
+•	3306 → Default MySQL port
+•	schooldb → Database name
+________________________________________
+2️⃣ spring.datasource.username
+spring.datasource.username=root
+🔍 Explanation
+•	Username used to authenticate with MySQL
+•	root is the database user
+🎤 Interview One-Liner
+Specifies the database username used for authentication.
+________________________________________
+3️⃣ spring.datasource.password
+spring.datasource.password=root
+🔍 Explanation
+•	Password for the above database user
+•	Used by MySQL to verify access
+⚠️ Best Practice
+•	Never hardcode passwords in production
+•	Use environment variables or vaults
+
+
+
+🔹 Exception Handling in Spring JDBC
+Spring converts SQLException into unchecked exceptions:
+•	DataAccessException
+•	DuplicateKeyException
+•	EmptyResultDataAccessException
+👉 No need to write throws SQLException
+
+
+
+--What is JdbcTemplate in Spring JDBC?
+
+👉 JdbcTemplate is the core Spring JDBC class that simplifies database access by handling connection management, SQL execution, and exception handling.
+
+--What are the main responsibilities of JdbcTemplate?
+👉 Creating connections, executing SQL, mapping results, and handling exceptions.
+
+--How does JdbcTemplate get the database connection?
+👉 JdbcTemplate uses a DataSource bean that Spring Boot auto-configures using application properties.
+
+Why JdbcTemplate?
+
+*Before Spring JDBC, we had to:
+*Open connections
+*Create statements
+*Handle exceptions
+*Close resources manually 😓
+
+👉 JdbcTemplate does all of this automatically.
+
+🔧 Common JdbcTemplate Methods
+Method	Purpose
+update()	INSERT / UPDATE / DELETE
+query()	SELECT multiple rows
+queryForObject()	SELECT single row
+queryForList()	List of rows
+queryForMap()	Single row as Map
+batchUpdate()	Batch operations
+
+
+Student Insert
+@Repository
+public class StudentRepository {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    public int save(Student s) {
+        String sql = "INSERT INTO student(id, name, email) VALUES (?, ?, ?)";
+        return jdbcTemplate.update(sql, s.getId(), s.getName(), s.getEmail());
+    }
+}
+
+
+Example: Fetch Students
+public List<Student> getAllStudents() {
+    return jdbcTemplate.query(
+        "SELECT * FROM student",
+        new StudentRowMapper()
+    );
+}
+
+
+--What is NamedParameterJdbcTemplate in Spring JDBC?
+
+👉 NamedParameterJdbcTemplate is a Spring JDBC class that allows you to use named parameters in SQL instead of positional ? placeholders.
+
+Repository Code
+@Repository
+public class StudentRepository {
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedJdbcTemplate;
+
+    public int save(Student s) {
+
+        String sql = "INSERT INTO student (id, name, email) " +
+                     "VALUES (:id, :name, :email)";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", s.getId());
+        params.put("name", s.getName());
+        params.put("email", s.getEmail());
+
+        return namedJdbcTemplate.update(sql, params);
+    }
+}
+
+🔁 Using BeanPropertySqlParameterSource
+
+👉 Automatically maps object fields
+
+public int save(Student s) {
+    String sql = "INSERT INTO student (id, name, email) " +
+                 "VALUES (:id, :name, :email)";
+
+    SqlParameterSource params =
+        new BeanPropertySqlParameterSource(s);
+
+    return namedJdbcTemplate.update(sql, params);
+}
+🔁 Using MapSqlParameterSource
+
+👉 We manually provide values:
+
+SqlParameterSource params =
+    new MapSqlParameterSource()
+        .addValue("id", 101)
+        .addValue("name", "Harish");
+
+🔍 Select Example
+public Student findById(int id) {
+    String sql = "SELECT * FROM student WHERE id = :id";
+
+    Map<String, Object> params = Map.of("id", id);
+
+    return namedJdbcTemplate.queryForObject(
+        sql, params, new StudentRowMapper());
+}
+
+Which is Best: Spring JDBC or Spring Data JPA?
+
+👉 Neither is universally “best”. The choice depends on the use case.
+   Spring JDBC is preferred for performance and SQL control, while Spring Data JPA is preferred for rapid development and complex domain models.
+🔹 “Spring JDBC is preferred for performance and SQL control”
+🔸 Why Performance?
+
+Spring JDBC executes raw SQL directly
+
+No ORM layer, no entity tracking, no dirty checking
+Less CPU & memory usage
+Faster for simple and bulk operations
+👉 In high-volume systems (banking, reporting), this matters a lot.
+
+Example
+
+SELECT account_id, balance FROM accounts WHERE balance > 100000;
+
+
+Executed exactly as written
+No object mapping overhead
+🔸 Why SQL Control?
+
+You write exact SQL
+Full control over:
+JOINs
+Index hints
+Database-specific functions
+
+Stored procedures
+
+👉 Very useful when:
+Queries are complex
+DB tuning is critical
+Using vendor-specific SQL (Oracle, MySQL, PostgreSQL)
+
+Interview line
+
+“Spring JDBC lets me optimize queries exactly as the database expects.”
+
+🔹 “Spring Data JPA is preferred for rapid development”
+🔸 Why Rapid Development?
+
+Minimal code
+No SQL for basic CRUD
+Auto-generated queries
+
+Example
+
+interface StudentRepository extends JpaRepository<Student, Long> {
+}
+
+
+👉 This single interface gives:
+
+save()
+findById()
+findAll()
+delete()
+
+💡 Less code = faster development = fewer bugs
+
+🔸 Why Complex Domain Models?
+
+Automatic mapping between tables and objects
+
+Handles:
+
+One-to-Many
+Many-to-Many
+Cascading
+Lazy loading
+
+Example
+
+@Entity
+class Order {
+    @OneToMany
+    List<Item> items;
+}
+
+
+👉 JPA automatically:
+
+*Fetches related data
+*Maintains object graph
+*Synchronizes changes
+
+🔄 Simple Real-World Analogy (Interview Friendly)
+
+Spring JDBC = Manual car
+👉 More control, better performance, requires skill
+
+Spring Data JPA = Automatic car
+👉 Easier to drive, faster to build, less control
+
+⚖️ When Interviewers Expect Each
+Choose Spring JDBC when:
+
+    *Performance is critical
+	*Heavy read/write operations
+	*SQL optimization matters
+	*Reporting & financial systems
+Choose Spring Data JPA when:
+	*Business logic is complex
+	*Many entity relationships
+	*Time-to-market is importan
+	*Team productivity matters
+
+What is connection pooling?
+👉 Reusing database connections instead of creating new ones every time.
+
+Default connection pool in Spring Boot?
+👉 HikariCP.
+
+Is JdbcTemplate thread-safe?
+👉 Yes, JdbcTemplate is thread-safe because it does not store connection state internally.
+
+Does JdbcTemplate use Statement or PreparedStatement?
+👉 JdbcTemplate uses PreparedStatement internally.
+📌 Trick: This is why SQL injection is prevented.
+
+What happens if queryForObject() returns multiple rows?
+👉 It throws IncorrectResultSizeDataAccessException.
+
+What happens if queryForObject() returns zero rows?
+👉 It throws EmptyResultDataAccessException.
+
+
+
+
+What is @Transactional?
+
+👉 @Transactional is a Spring annotation used to manage database transactions automatically by committing on success and rolling back on failure.
+
+⚙️ Important Attributes (Interview Gold)
+Attribute	Meaning
+propagation	How transaction behaves
+isolation	Data visibility
+rollbackFor	Rollback for checked exceptions
+readOnly	Optimization for SELECT
+timeout	Max execution time
+
+
+🔥 Important @Transactional Attributes Explained
+1️⃣ propagation – How transaction behaves
+
+👉 Defines how a method joins or creates a transaction.
+
+🔹 Default
+Propagation.REQUIRED
+
+🔹 Common Types (Interview Focus)
+Type	Meaning
+REQUIRED	Join existing or create new
+REQUIRES_NEW	Always create new
+SUPPORTS	Join if exists
+NOT_SUPPORTED	Execute without transaction
+MANDATORY	Must have transaction
+NEVER	Must not have transaction
+✅ Example
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public void savePayment() { }
+
+🎯 Interview Line
+
+Propagation defines how transactions behave when one method calls another.
+
+2️⃣ isolation – Data visibility between transactions
+
+👉 Controls how one transaction sees changes from another.
+
+🔹 Common Levels
+Level	Problem Solved
+READ_UNCOMMITTED	Allows dirty reads
+READ_COMMITTED	Prevents dirty reads
+REPEATABLE_READ	Prevents non-repeatable reads
+SERIALIZABLE	Prevents all anomalies
+🔹 Default
+Isolation.DEFAULT
+
+
+👉 Uses database default.
+
+✅ Example
+@Transactional(isolation = Isolation.READ_COMMITTED)
+
+🎯 Interview Line
+
+Isolation controls concurrency issues like dirty reads and phantom reads.
+
+3️⃣ rollbackFor – Rollback for checked exceptions
+
+👉 By default, Spring rolls back only for runtime exceptions.
+
+🔹 To rollback for checked exceptions:
+@Transactional(rollbackFor = Exception.class)
+
+✅ Example
+@Transactional(rollbackFor = SQLException.class)
+public void saveData() throws SQLException { }
+
+🎯 Interview Line
+
+rollbackFor forces rollback even for checked exceptions.
+
+4️⃣ readOnly – Optimization for SELECT
+
+👉 Tells Spring this transaction won’t modify data.
+
+🔹 Default
+false
+
+✅ Example
+@Transactional(readOnly = true)
+public List<Student> getAllStudents() { }
+
+💡 Benefits
+
+✔️ Better performance
+✔️ Prevents accidental writes
+
+🎯 Interview Line
+
+readOnly improves performance for read operations.
+
+5️⃣ timeout – Maximum execution time
+
+👉 Sets how long a transaction can run before rollback.
+
+🔹 Unit: seconds
+✅ Example
+@Transactional(timeout = 5)
+public void processPayment() { }
+
+
+👉 If execution exceeds 5 seconds → rollback
+
+🎯 Interview Line
+
+timeout prevents long-running transactions.
+
+🧠 All Attributes in One Example (Show-Off Code)
+@Transactional(
+    propagation = Propagation.REQUIRED,
+    isolation = Isolation.READ_COMMITTED,
+    rollbackFor = Exception.class,
+    readOnly = false,
+    timeout = 10
+)
+public void saveStudent() {
+    // DB logic
+}

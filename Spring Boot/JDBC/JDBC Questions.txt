@@ -1,0 +1,71 @@
+Part A: From Your Notes
+What is JDBC?
+What are the JDBC architecture layers?
+What are the steps to connect a database to a Java application?
+Describe the JDBC connection flow and the purpose of the PostgreSQL JDBC driver.
+What is Statement?
+What is PreparedStatement?
+What is the difference between Statement and PreparedStatement?
+Demonstrate knowledge of executing and processing SQL queries using ResultSet.
+Discuss error handling and resource cleanup in JDBC.
+Write a short code snippet to fetch data from a database.
+What is SQL Injection?
+What is a transaction in JDBC?
+What is JDBC Batch processing?
+Show a JDBC batch insert example.
+What are the benefits of batch processing?
+Part B: Extra Questions
+Drivers & Connection
+16. What are the types of JDBC drivers?
+17. Is Class.forName() still required?
+18. What are the common JDBC URL formats?
+19. What is DriverManager?
+20. DriverManager vs DataSource?
+21. Why do we need connection pooling?
+22. Is Connection thread-safe?
+Statement Types & Execute Methods
+23. What are the types of statements in JDBC?
+24. executeQuery() vs executeUpdate() vs execute()?
+25. Why is PreparedStatement faster than Statement?
+26. Can we use a placeholder (?) for a table or column name?
+27. How do you call a stored procedure in JDBC?
+28. How do you get the auto-generated key after an INSERT?
+ResultSet
+29. What is the initial position of the ResultSet cursor?
+30. What are the types of ResultSet?
+31. How do you create a scrollable ResultSet?
+32. getString("name") vs getString(1)?
+33. How do you handle NULL values from a ResultSet?
+34. What are ResultSetMetaData and DatabaseMetaData?
+35. What happens to the ResultSet when its Statement is closed?
+Error Handling & Resource Cleanup
+36. Show try-with-resources in JDBC.
+37. What information does SQLException give?
+38. Is SQLException checked or unchecked?
+39. What are some common SQLException subclasses?
+40. What happens if you forget to close the connection?
+SQL Injection
+41. Show an example of SQL injection.
+42. How do you prevent SQL injection in JDBC?
+Transactions (Advanced)
+43. What are ACID properties?
+44. Show a money-transfer transaction example.
+45. What is a Savepoint?
+46. What are the transaction isolation levels in JDBC?
+47. What are dirty read, non-repeatable read and phantom read?
+48. What happens if you close a connection without commit or rollback when auto-commit is off?
+Batch (Advanced)
+49. What does executeBatch() return?
+50. What happens if one statement in a batch fails?
+51. How do you batch a large number of records efficiently?
+52. Can Statement also do batch?
+Misc & Scenario Questions
+53. java.util.Date vs java.sql.Date?
+54. How do you store and read large data (BLOB / CLOB)?
+55. How do you set a query timeout and fetch size?
+56. What are the limitations of plain JDBC?
+57. How does Spring JDBC improve on plain JDBC?
+58. JDBC vs Hibernate/JPA?
+59. Scenario: “Too many connections” error. What do you check?
+60. Scenario: how do you read a very large table without running out of memory?
+61. Scenario: how do you insert a parent record and use its generated ID in a child table?

@@ -1,0 +1,209 @@
+﻿============================================================
+SPRING JDBC - INTERVIEW QUESTIONS
+============================================================
+
+
+[Basics]
+1. What is Spring JDBC?
+2. Why do we use Spring JDBC instead of Plain JDBC?
+3. What problems exist in traditional JDBC?
+4. Which dependency is used for Spring JDBC in Spring Boot?
+5. What are the main classes/components in Spring JDBC?
+
+[DataSource & Configuration]
+6. What is DataSource in Spring JDBC?
+7. How is the DB connected in Spring Boot?
+8. Explain spring.datasource.url.
+9. What do spring.datasource.username and password do?
+10. How do you configure DataSource manually? (Rare)
+11. What is the difference between DriverManagerDataSource and a pooled DataSource (HikariCP)?
+12. What is connection pooling?
+13. What is the default connection pool in Spring Boot?
+
+[JdbcTemplate]
+14. What is JdbcTemplate in Spring JDBC?
+15. What are the main responsibilities of JdbcTemplate?
+16. How does JdbcTemplate get the database connection?
+17. Why JdbcTemplate?
+18. What are the common JdbcTemplate methods?
+19. Write an INSERT example using JdbcTemplate.
+20. Write a SELECT example to fetch all students.
+21. What is the difference between update() and batchUpdate()?
+22. What is the difference between query(), queryForObject(), and queryForList()?
+23. What happens if queryForObject() returns multiple rows?
+24. What happens if queryForObject() returns zero rows?
+25. Is JdbcTemplate thread-safe?
+26. Does JdbcTemplate use Statement or PreparedStatement?
+27. How do you get the auto-generated key after an INSERT?
+28. What is SimpleJdbcInsert?
+29. How do you call a stored procedure in Spring JDBC?
+
+[RowMapper & ResultSetExtractor]
+30. What is RowMapper in Spring JDBC?
+31. What is ResultSetExtractor in Spring JDBC?
+32. What is the difference between RowMapper and ResultSetExtractor?
+33. Write a RowMapper implementation.
+34. What is BeanPropertyRowMapper?
+
+[NamedParameterJdbcTemplate]
+35. What is NamedParameterJdbcTemplate in Spring JDBC?
+36. Why use NamedParameterJdbcTemplate over JdbcTemplate?
+37. Write an INSERT example using NamedParameterJdbcTemplate.
+38. What is BeanPropertySqlParameterSource?
+39. What is MapSqlParameterSource?
+40. Write a SELECT example using NamedParameterJdbcTemplate.
+
+[Exception Handling]
+41. How does Spring JDBC handle exceptions?
+42. Why is DataAccessException unchecked?
+
+[@Transactional]
+43. What is @Transactional?
+44. What are the important attributes of @Transactional?
+45. What is propagation in @Transactional?
+46. What is isolation in @Transactional?
+47. What is rollbackFor?
+48. What is readOnly in @Transactional?
+49. What is timeout in @Transactional?
+50. Show all attributes in one example.
+51. Which transaction manager is used with Spring JDBC?
+52. How does @Transactional work internally?
+53. Why does @Transactional not work when a method is called from the same class (self-invocation)?
+
+[Spring JDBC vs Spring Data JPA]
+54. Which is best: Spring JDBC or Spring Data JPA?
+55. Why is Spring JDBC preferred for performance and SQL control?
+56. Why is Spring Data JPA preferred for rapid development and complex domain models?
+57. Give a real-world analogy for Spring JDBC vs JPA.
+58. When should you choose Spring JDBC, and when Spring Data JPA?
+59. How does Spring JDBC prevent SQL injection?
+
+------------------------------------------------------------
+Extra Questions (Commonly Expected in Interviews)
+------------------------------------------------------------
+
+[JDBC Fundamentals]
+60. What are the steps in plain JDBC?
+61. What is the difference between Statement, PreparedStatement and CallableStatement?
+62. What design pattern does JdbcTemplate follow?
+63. What are the callback interfaces used by JdbcTemplate?
+64. How does Spring JDBC avoid connection leaks?
+
+[More JdbcTemplate Usage]
+65. How do you fetch a single value like a count?
+66. Write UPDATE and DELETE examples with JdbcTemplate.
+67. Write a queryForObject() example for one student by id.
+68. Write a batchUpdate() example.
+69. How do you handle a "not found" case with queryForObject()?
+70. What is execute() in JdbcTemplate?
+71. How do you implement pagination with Spring JDBC?
+72. How do you process a very large result set without loading everything into memory?
+73. What is the difference between RowMapper and RowCallbackHandler?
+74. How do you set query timeout, fetch size and max rows?
+75. What is JdbcClient? (Spring 6.1 / Boot 3.2+)
+
+[NamedParameterJdbcTemplate & Simple* Helpers]
+76. How do you use an IN clause with NamedParameterJdbcTemplate?
+77. What is the relationship between NamedParameterJdbcTemplate and JdbcTemplate?
+78. How do you get the generated key with SimpleJdbcInsert?
+79. How do you get the generated key with NamedParameterJdbcTemplate?
+
+[RowMapper & ResultSetExtractor (Advanced)]
+80. How do you map a one-to-many join using ResultSetExtractor?
+81. What is the difference between BeanPropertyRowMapper and DataClassRowMapper?
+82. What is the drawback of BeanPropertyRowMapper?
+83. How do you handle NULL values in a RowMapper?
+
+[DataSource, HikariCP & Configuration]
+84. What are the important HikariCP properties?
+85. How do you choose the pool size?
+86. What happens when all connections in the pool are busy?
+87. How do you configure multiple DataSources?
+88. Which Spring Boot auto-configuration classes set up JDBC?
+89. How do you run schema.sql and data.sql at startup?
+90. How do you log the SQL executed by JdbcTemplate?
+
+[Exception Handling (Advanced)]
+91. Explain the DataAccessException hierarchy.
+92. How does Spring translate SQLException into DataAccessException?
+93. What are transient and non-transient data access exceptions?
+94. How do you handle DuplicateKeyException?
+95. What is the role of @Repository in Spring JDBC?
+
+[@Transactional & Transactions (Advanced)]
+96. What are ACID properties?
+97. What are dirty read, non-repeatable read and phantom read?
+98. Which isolation level prevents which problem?
+99. Explain REQUIRED vs REQUIRES_NEW with an example.
+100. What is NESTED propagation?
+101. What is the default rollback behavior of @Transactional?
+102. Why doesn't the transaction roll back when I catch the exception inside the method?
+103. Does @Transactional work on private methods?
+104. @Transactional on class level vs method level?
+105. What is TransactionTemplate? (Programmatic transactions)
+106. Declarative vs programmatic transaction management?
+107. What is PlatformTransactionManager?
+108. Can JdbcTemplate and JPA be used together in the same transaction?
+109. Does readOnly = true really prevent writes?
+
+[Testing, Practical & Scenario Questions]
+110. How do you test Spring JDBC code?
+111. What are the disadvantages of Spring JDBC?
+112. How do you avoid SQL injection when the table or column name is dynamic?
+113. Scenario: a bulk insert of 1 lakh (100,000) records is slow. How do you optimize it?
+114. Scenario: Connection is not available, request timed out error. What do you check?
+115. Scenario: how do you handle a deadlock?
+116. Scenario: how do you do an optimistic lock with Spring JDBC?
+117. Can we use Spring JDBC without Spring Boot?
+118. Spring JDBC vs Hibernate: which would you pick for a reporting module?
+
+------------------------------------------------------------
+PART C: Advanced Questions Expected in Interviews
+------------------------------------------------------------
+
+[Internals & Transaction Behavior]
+119. How does JdbcTemplate work internally?
+120. How does Spring make JdbcTemplate use the same connection inside a @Transactional method?
+121. What happens when you call JdbcTemplate without @Transactional?
+122. What are LazyConnectionDataSourceProxy and TransactionAwareDataSourceProxy?
+123. What is UnexpectedRollbackException?
+124. If a method joins an existing transaction (REQUIRED), are its own isolation / readOnly / timeout applied?
+125. Why doesn't a transaction carry over to @Async methods or other threads?
+126. How do you run code only after the transaction commits?
+127. How do you handle a transaction across two databases?
+
+[JDBC API Usage (Advanced)]
+128. How do you do a batch update with named parameters or a custom setter?
+129. What are the RDBMS operation objects (MappingSqlQuery, SqlUpdate, StoredProcedure)?
+130. How do you call a stored procedure with OUT parameters and a returned result set?
+131. How do you pass NULL parameters correctly?
+132. How do you customize exception translation?
+133. How do you implement keyset (seek) pagination with Spring JDBC?
+134. How do you build a dynamic WHERE clause safely with NamedParameterJdbcTemplate?
+135. How do you lock rows with JdbcTemplate (FOR UPDATE, SKIP LOCKED)?
+136. How do you retry on transient DB failures in Spring?
+
+[Production Concerns]
+137. How do you route reads to a replica and writes to the primary?
+138. How do you monitor the connection pool in a Spring Boot app?
+139. Why use Flyway or Liquibase with Spring JDBC?
+140. How do you test Spring JDBC code against a real database?
+141. When would you use Spring Batch's JDBC readers and writers?
+
+[Scenario Questions (Advanced)]
+142. Scenario: the service method threw an exception, but the first insert is still saved in the DB. Why?
+143. Scenario: under load the app hangs with "connection not available" and all threads are waiting, yet the DB is idle. What is a possible cause?
+144. Scenario: a batch import loops over 1000 items, calling a service for each inside one @Transactional method with try/catch to skip bad items. The whole import still rolls back. Why?
+145. Scenario: a @Transactional method calls an external payment API that takes 5 seconds. What is the problem?
+146. Scenario: you must send a Kafka message/email only if the DB transaction really commits. How?
+147. Scenario: heavy reports slow down the main application. What are your options?
+148. Scenario: you parallelized DB writes using parallelStream() / @Async and now rollbacks don't work. Why?
+149. Scenario: you need to upsert 1 lakh (100,000) rows from a file efficiently.
+150. Scenario: build a search API with optional filters, sorting and pagination using Spring JDBC.
+151. Scenario: multiple app instances poll a job table and the same job is picked twice. How do you fix it?
+152. Scenario: queryForObject() throws EmptyResultDataAccessException for normal "not found" cases in production. What is the clean fix?
+153. Scenario: an order must be saved in DB-1 and a payment record in DB-2, atomically. What do you do?
+154. Scenario: batchUpdate() of 5000 rows fails because of one bad record. What happens and how do you handle it?
+155. Scenario: the query is fast in the DB client but slow through Spring JDBC. What do you check?
+156. Scenario: you insert a row and read its id with SELECT MAX(id). Why is this wrong, and what should you do?
+157. Scenario: build a safe money-transfer service using Spring JDBC.
